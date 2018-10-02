@@ -26,7 +26,9 @@
 
   >  当需要手动响应1个指定状态码的错误时，可以先使用本注解指定响应状态码定义1个异常类，然后手动抛出该异常
 
-+ 例
++ 作用在类上
+
+  例
 
   + 异常类
 
@@ -67,6 +69,26 @@
   + 分析
 
     > 当抛出该异常时，因为该异常上标注了本注解，所以spring直接响应了1个该注解指定的状态码的错误
+
++ 作用在方法上
+
+  > 该注解不可以用在标注了`@xxxMapping`的方法，否则程序正常执行时也会返回异常
+  >
+  > 该注解可以与`@ExceptionHandler`注解共同标注在方法上，当执行这个方法时就会返回指定的状态码
+
+  例
+
+  ```java
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity handleException(Exception e) {
+      logger.error("系统错误: ", e);
+      ErrorResponse errorResponse = new ErrorResponse(1005, "系统繁忙");
+      return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+  ```
+
+  > 当产生`Exception`时，就会返回500错误
 
 ### @ExceptionHandler
 
@@ -321,7 +343,7 @@
   >   打印：
   >
   >   	model = 123
-  >
+  >	
   >   	123
   >
   > + 先访问`localhost:8080/session-attribute/test1`
