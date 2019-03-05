@@ -343,7 +343,7 @@
   >   打印：
   >
   >   	model = 123
-  >	
+  >		
   >   	123
   >
   > + 先访问`localhost:8080/session-attribute/test1`
@@ -442,11 +442,16 @@
 
 ### @RequestParam
 
-+ 作用：用于将请求参数映射到其标注的参数上
++ 作用：
+
+  可以接受如下两种方式传递的参数：
+
+  + url中拼接的
+  + Content-Type = application/x-www-form-urlencoded 或 multipart/form-data 时，form表单中提交的请求参数
 
 + 要求
 
-  + 请求头不是`application/json`的时候
+  + 只能标注在属性上，不能标注在实体类上
 
 + 属性
 
@@ -465,6 +470,7 @@
   + required
 
     + 类型：boolean
+    + 默认值：true
     + 作用：指定该参数是否必传
 
   + defaultValue
@@ -478,17 +484,8 @@
 
 + 要求
 
-  > 使用该注解时，需要满足以下要求
-  >
-  > + json必须放在请求正文中，不可以拼接到url
-  >
-  >   因为GET请求没有正文，所以不适用于GET请求
-  >
-  > + `Content-Type`请求头必须为`application/json`
-
-  因为上述第2点要求，所以使用POSTMAN测试时需要按如下方式发送请求：
-
-  <img src="assets/image-20180820221259388.png" width="400px" /> 
+  + `Content-Type`请求头必须为`application/json`
+  + 一般标注在实体类对象上，标注在属性上时，将整个正文作为该属性的值
 
 + 例
 
@@ -508,7 +505,7 @@
 
   + 请求
 
-    参见上图
+    <img src="assets/image-20180820221259388.png" width="400px" /> 
 
 ### @PathVariable
 
@@ -640,7 +637,32 @@
 
 > 先不研究
 
+## 接受请求参数
 
+### 无注解
+
++ 可以用`属性`和`实体类对象`接受，也可以接受`文件`
++ 可以接受url中参数，当`Content-type`为`multipart/form-data`或`application/x-www-form-urlencoded`时，可以接受form表单中参数
++ 默认`required`属性为`false`，可以用`@NotNull`注解来要求必传
+
+### 各种接受请求参数方式对比
+
+|                                   | @RequestPart | @RequestParam | 无注解 | @RequestBody |
+| :-------------------------------: | :----------: | :-----------: | :----: | :----------: |
+|            用属性接收             |              |       ✅       |   ✅    |      x       |
+|         用实体类对象接收          |              |       x       |   ✅    |      ✅       |
+|                url                |              |       ✅       |   ✅    |      x       |
+|        multipart/form-data        |              |       ✅       |   ✅    |      x       |
+| application/x-www-form-urlencoded |              |       ✅       |   ✅    |      x       |
+|         application/json          |              |       x       |   x    |      ✅       |
+|             接收文件              |      ✅       |       ✅       |   ✅    |      x       |
+|          属性设置默认值           |              |       ✅       |   x    |              |
+
+根据上表总结出如下使用方式：
+
++ `Content-type`为`application/json`时，使用`@RequestBody`
++ 使用`属性`接收，并且需要设置默认值时，使用`@RequestParam`
++ 其他情况均使用`无注解`方式
 
 
 
