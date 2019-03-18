@@ -486,6 +486,8 @@
 
   + `Content-Type`请求头必须为`application/json`
   + 一般标注在实体类对象上，标注在属性上时，将整个正文作为该属性的值
+  + 参数列表中该注解只能出现1次
+  + 一般情况下，只要是Post请求，就用该注解接受请求体中的参数
 
 + 例
 
@@ -642,21 +644,22 @@
 ### 无注解
 
 + 可以用`属性`和`实体类对象`接受，也可以接受`文件`
-+ 可以接受url中参数，当`Content-type`为`multipart/form-data`或`application/x-www-form-urlencoded`时，可以接受form表单中参数
++ 可以接受url中参数，当`Content-type`为`multipart/form-data`或`application/x-www-form-urlencoded`时，可以接受form表单中参数，可以接受`path`中的参数
 + 默认`required`属性为`false`，可以用`@NotNull`注解来要求必传
 
 ### 各种接受请求参数方式对比
 
-|                                   | @RequestPart | @RequestParam | 无注解 | @RequestBody |
-| :-------------------------------: | :----------: | :-----------: | :----: | :----------: |
-|            用属性接收             |              |       ✅       |   ✅    |      x       |
-|         用实体类对象接收          |              |       x       |   ✅    |      ✅       |
-|                url                |              |       ✅       |   ✅    |      x       |
-|        multipart/form-data        |              |       ✅       |   ✅    |      x       |
-| application/x-www-form-urlencoded |              |       ✅       |   ✅    |      x       |
-|         application/json          |              |       x       |   x    |      ✅       |
-|             接收文件              |      ✅       |       ✅       |   ✅    |      x       |
-|          属性设置默认值           |              |       ✅       |   x    |              |
+|                          | @RequestPart | @RequestHeader | @PathVariable | @RequestParam | 无注解 | @RequestBody |
+| :----------------------: | :----------: | :------------: | :-----------: | :-----------: | :----: | :----------: |
+|        用属性接收        |              |       ✅        |       ✅       |       ✅       |   ✅    |      x       |
+|     用实体类对象接收     |              |       x        |       x       |       x       |   ✅    |      ✅       |
+|      接收url中参数       |              |       x        |       x       |       ✅       |   ✅    |      x       |
+|    接收form表单中参数    |              |       x        |       x       |       ✅       |   ✅    |      x       |
+|   接收application/json   |              |       x        |       x       |       x       |   x    |      ✅       |
+|     接收header中参数     |              |       ✅        |       x       |       x       |   x    |      x       |
+|      接收path中参数      |              |       x        |       ✅       |       x       |   ✅    |      x       |
+|         接收文件         |      ✅       |       x        |       x       |       ✅       |   ✅    |      x       |
+| 是否可以为属性设置默认值 |              |       ✅        |               |       ✅       |   x    |              |
 
 根据上表总结出如下使用方式：
 

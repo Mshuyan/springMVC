@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/request-body")
 public class RequestBodyController {
     @RequestMapping("/get-test")
-    public void getTest(String username){
-        System.out.println(username);
+    public void getTest(User user){
+        System.out.println(user.toString());
     }
 }
