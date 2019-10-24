@@ -189,6 +189,13 @@
 + 例
 
   参见[@ExceptionHandler](#@ExceptionHandler)中的第2个例程
+  
++ 注意
+
+  + 如果`@ControllerAdvice`不起作用，从下面几点进行检查
+    + 确保注解@RestControllerAdvice/@ControllerAdvice的类被spring容器管理到。
+    + 检查项目中所有的切面编程，是否在某个切面将异常try-catch然后没有扔出来。常见的就是切面的环绕处理，捕获了异常忘记抛出来。
+    + 检查项目中是否有其他的相同的全局异常处理类，例如BaseController中是否已经定义了
 
 ### @RestControllerAdvice
 
